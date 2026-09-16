@@ -51,6 +51,10 @@ namespace Ui {
     class MainWindow;  /*! The main window UI */
 }
 
+#ifdef GQRX_TOUCH_UI
+class TouchController;
+#endif
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -73,6 +77,9 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+#ifdef GQRX_TOUCH_UI
+    TouchController *touchUi = nullptr;
+#endif
 
     QPointer<QSettings> m_settings;  /*!< Application wide settings. */
     QString             m_cfg_dir;   /*!< Default config dir, e.g. XDG_CONFIG_HOME. */

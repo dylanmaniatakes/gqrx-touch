@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Gqrx Touch
+Comment=Software defined radio for touchscreens and handheld keyboards
+Exec=gqrx --touch
+Icon=dk.gqrx.gqrx
+Terminal=false
+Categories=AudioVideo;Audio;HamRadio;
+Keywords=SDR;Radio;HAM;Touch;

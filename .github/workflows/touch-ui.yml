@@ -1,0 +1,26 @@
+name: Touch UI tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  qt-navigation:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        qt: [5, 6]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt
+        run: |
+          sudo apt-get update
+          if [ "${{ matrix.qt }}" = 5 ]; then
+            sudo apt-get install -y cmake qtbase5-dev
+          else
+            sudo apt-get install -y cmake qt6-base-dev
+          fi
+      - name: Build UI tests
+        run: |
+          cmake -S tests/touch -B build/touch-tests -DFORCE_QT5=${{ matrix.qt == 5 && 'ON' || 'OFF' }}
+          cmake --build build/touch-tests -j2
+      - name: Test touch navigation and UI restoration
+        run: ctest --test-dir build/touch-tests --output-on-failure

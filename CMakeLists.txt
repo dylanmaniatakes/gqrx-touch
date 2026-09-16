@@ -271,6 +271,17 @@ install(FILES dk.gqrx.gqrx.appdata.xml DESTINATION share/metainfo)
 # Install icon
 install(FILES resources/icons/dk.gqrx.gqrx.svg DESTINATION share/icons/hicolor/scalable/apps)
 
+# Optional touch presentation layer; receiver/DSP sources are unchanged.
+option(ENABLE_TOUCH_UI "Build the handheld touch interface" ON)
+option(ENABLE_TOUCH_INTEGRATION_TESTS "Build the full receiver touch integration test" OFF)
+if(ENABLE_TOUCH_INTEGRATION_TESTS)
+    enable_testing()
+endif()
+if(ENABLE_TOUCH_UI)
+    add_definitions(-DGQRX_TOUCH_UI)
+    install(FILES resources/gqrx-touch.desktop DESTINATION share/applications)
+endif()
+
 # Add subdirectories
 add_subdirectory(src)
 

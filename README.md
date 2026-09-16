@@ -1,3 +1,24 @@
+# Gqrx Touch
+
+A switchable touch and keyboard interface for Gqrx, designed for the Waveshare
+PocketTerm35's 640 × 480 screen. The receiver and DSP stay upstream Gqrx.
+
+**[Touch interface, controls and Pi build guide](docs/TOUCH.md)** ·
+**[Validation and hardware testing status](docs/VALIDATION.md)**
+
+![Gqrx Touch tuning screen using synthetic I/Q data](docs/images/touch-tune.png)
+
+Run `gqrx --touch`, or choose **View → Touch interface**. Use the **Desktop**
+button or **Ctrl+Shift+T** to switch back. The optional adapter lives in
+`src/qtgui/touch/`; build with `-DENABLE_TOUCH_UI=OFF` for the original interface.
+
+Compiled and tested on macOS with synthetic I/Q data, then built and installed
+on the Pi 4 deck running Debian 13 with a verified Wayland startup. Physical touch,
+movement keys and live RF reception remain unverified. See
+[Pi deployment details](docs/DEPLOYMENT-PI.md). The upstream project information follows.
+
+---
+
 Gqrx
 ====
 

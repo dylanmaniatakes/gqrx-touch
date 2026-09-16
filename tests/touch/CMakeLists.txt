@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.16)
+project(gqrx_touch_tests LANGUAGES CXX)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_CXX_STANDARD 17)
+option(FORCE_QT5 "Test with Qt 5" OFF)
+if(FORCE_QT5)
+    find_package(Qt5 REQUIRED COMPONENTS Widgets Test)
+    set(QT Qt5)
+else()
+    find_package(Qt6 REQUIRED COMPONENTS Widgets Test)
+    set(QT Qt6)
+endif()
+enable_testing()
+add_executable(touch-tests touch_test.cpp
+    ../../src/qtgui/touch/touchcontroller.cpp
+    ../../src/qtgui/touch/touchcontroller.h
+    ../../src/qtgui/freqctrl.cpp)
+target_include_directories(touch-tests PRIVATE ../../src)
+target_link_libraries(touch-tests PRIVATE ${QT}::Widgets ${QT}::Test)
+add_test(NAME touch-tests COMMAND touch-tests)
+set_tests_properties(touch-tests PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")

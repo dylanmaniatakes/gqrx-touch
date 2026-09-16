@@ -49,6 +49,9 @@
 #include <QSvgWidget>
 #include "qtgui/ioconfig.h"
 #include "mainwindow.h"
+#ifdef GQRX_TOUCH_UI
+#include "qtgui/touch/touchcontroller.h"
+#endif
 #include "qtgui/dxc_options.h"
 #include "qtgui/dxc_spots.h"
 
@@ -366,6 +369,14 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     m_recent_config = new RecentConfig(m_cfg_dir, ui->menu_RecentConfig);
     connect(m_recent_config, SIGNAL(loadConfig(const QString &)), this, SLOT(loadConfigSlot(const QString &)));
 
+#ifdef GQRX_TOUCH_UI
+    touchUi = new TouchController(this, ui->freqCtrl, ui->plotter,
+        {uiDockRxOpt, uiDockInputCtl, uiDockAudio, uiDockFft, uiDockBookmarks, uiDockRDS});
+    ui->menu_View->addSeparator();
+    ui->menu_View->addAction(touchUi->toggleAction());
+    touchUi->setEnabled(TouchController::startupEnabled());
+#endif
+
     // restore last session
     if (!loadConfig(cfgfile, true, true))
     {
@@ -401,6 +412,10 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
 MainWindow::~MainWindow()
 {
+#ifdef GQRX_TOUCH_UI
+    touchUi->prepareForShutdown();
+    delete touchUi;
+#endif
     on_actionDSP_triggered(false);
 
     /* stop and delete timers */
@@ -535,7 +550,16 @@ bool MainWindow::loadConfig(const QString& cfgfile, bool check_crash,
         ui->mainToolBar->hide();
 
     // main window settings
-    if (restore_mainwindow)
+#ifdef GQRX_TOUCH_UI
+    if (restore_mainwindow && touchUi->isEnabled())
+        touchUi->rememberDesktopLayout(m_settings->value("gui/geometry").toByteArray(),
+                                       m_settings->value("gui/state").toByteArray());
+#endif
+    if (restore_mainwindow
+#ifdef GQRX_TOUCH_UI
+        && !touchUi->isEnabled()
+#endif
+    )
     {
         restoreGeometry(m_settings->value("gui/geometry",
                                           saveGeometry()).toByteArray());

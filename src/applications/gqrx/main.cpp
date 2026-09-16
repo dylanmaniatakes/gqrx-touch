@@ -88,6 +88,10 @@ int main(int argc, char *argv[])
         {{"e", "edit"}, "Edit the config file before using it"},
         {{"r", "reset"}, "Reset configuration file"},
     });
+#ifdef GQRX_TOUCH_UI
+    parser.addOption({"touch", "Start with the handheld touch interface"});
+    parser.addOption({"desktop", "Start with the classic desktop interface"});
+#endif
     parser.process(app);
 
     if (parser.isSet("style"))

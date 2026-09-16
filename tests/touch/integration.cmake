@@ -1,0 +1,17 @@
+# Optional full receiver/UI integration test; kept out of normal application builds.
+if(Qt6_FOUND)
+    find_package(Qt6 REQUIRED COMPONENTS Test)
+    set(TOUCH_TEST_QT Qt6)
+else()
+    find_package(Qt5 REQUIRED COMPONENTS Test)
+    set(TOUCH_TEST_QT Qt5)
+endif()
+set(TOUCH_APP_SOURCES ${${PROJECT_NAME}_SOURCE})
+list(FILTER TOUCH_APP_SOURCES EXCLUDE REGEX "/main\\.cpp$")
+add_executable(gqrx-touch-integration ${TOUCH_APP_SOURCES} ${UIS_HDRS} ${RESOURCES_LIST}
+    ${CMAKE_SOURCE_DIR}/tests/touch/integration_test.cpp)
+get_target_property(TOUCH_APP_LIBS ${PROJECT_NAME} LINK_LIBRARIES)
+target_link_libraries(gqrx-touch-integration PRIVATE ${TOUCH_APP_LIBS} ${TOUCH_TEST_QT}::Test)
+set_property(TARGET gqrx-touch-integration PROPERTY CXX_STANDARD 17)
+add_test(NAME gqrx-touch-integration COMMAND gqrx-touch-integration)
+set_tests_properties(gqrx-touch-integration PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 60)
